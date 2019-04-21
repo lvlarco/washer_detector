@@ -1,0 +1,1 @@
+# washer_detector
