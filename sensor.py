@@ -23,8 +23,10 @@ GPIO.setup(vertical_sensor, GPIO.IN)
 GPIO.setup(horizontal_led, GPIO.OUT)
 GPIO.setup(vertical_led, GPIO.OUT)
 
-horizontal_df = pd.DataFrame(columns=['datetime', 'horizontal'])
-vertical_df = pd.DataFrame(columns=['datetime', 'vertical'])
+hor_cols = ['datetime', 'horizontal']
+horizontal_df = pd.DataFrame(columns=hor_cols)
+ver_cols = ['datetime', 'vertical']
+vertical_df = pd.DataFrame(columns=ver_cols)
 
 s = sched.scheduler(time.time, time.sleep)
 
