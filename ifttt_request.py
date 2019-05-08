@@ -9,7 +9,7 @@ def send_ifttt_request(event):
     return requests.post(maker_url)
 
 def main():
-    event = 'vibration_stopped'
+    event = 'washer_stopped_sms'
     # event = 'washer_stopped_notification'
     send_ifttt_request(event)
 
