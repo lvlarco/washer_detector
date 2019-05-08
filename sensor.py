@@ -10,6 +10,7 @@ GPIO.setmode(GPIO.BCM)
 start_time = datetime.now()
 print start_time
 sleep_time = 0.5
+delay_time = 10
 
 # Input pins
 horizontal_sensor = 18
@@ -41,11 +42,14 @@ while True:
         elif vertical_state:
             GPIO.output(vertical_led, True)
 
-    if (datetime.now() - start_time) > timedelta(seconds=10):
+    if (datetime.now() - start_time) > timedelta(seconds=delay_time):
         start_time = datetime.now()
-        scheduler.merge_csv(horizontal_df, vertical_df)
-
+        merge_df = scheduler.merge_csv(horizontal_df, vertical_df)
+        horizontal_avg, vertical_avg = scheduler.determine_mean(sleep_time, delay_time, merge_df)
+        print horizontal_avg, vertical_avg
+        if horizontal_avg and vertical_avg < 0.1:
+            print 'Washer has turned off'
+            washer_state = False
     time.sleep(sleep_time)
 
-
-
+GPIO.cleanup()

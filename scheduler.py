@@ -1,11 +1,12 @@
 from datetime import datetime, timedelta
 import pandas as pd
-# import random
-# import sched, time
+import random
+import sched, time
 
 start_time = datetime.now()
 print start_time
 sleep_time = 1
+delay_time = 5
 
 hor_cols = ['datetime', 'horizontal']
 ver_cols = ['datetime', 'vertical']
@@ -27,18 +28,33 @@ def current_df(horizontal_df, horizontal_state, vertical_df, vertical_state):
 
 def merge_csv(horizontal_df, vertical_df):
     result_df = pd.merge(horizontal_df, vertical_df, on='datetime', how='outer').sort_values(by='datetime')
-    # result_df = result_df.sort_values('datetime')
     print result_df
+    return result_df
 
-# horizontal_df, vertical_df = define_df()
-# while True:
-#     horizontal_state = random.randint(0, 1)
-#     vertical_state = random.randint(0, 1)
-#     horizontal_df, vertical_df = current_df(horizontal_df, horizontal_state, vertical_df, vertical_state)
-#
-#     if (datetime.now() - start_time) > timedelta(seconds=5):
-#         start_time = datetime.now()
-#         merge_csv(horizontal_df, vertical_df)
-#
-#     time.sleep(sleep_time)
-#         # s.enter(20, 1, merge_csv(horizontal_df, vertical_df),  (s,))
+
+def determine_mean(sleep_time, delay_time, df):
+    number_points = delay_time / sleep_time
+    df = df.tail(number_points)
+    horizontal_avg = df['horizontal'].mean()
+    vertical_avg = df['vertical'].mean()
+    return horizontal_avg, vertical_avg
+
+
+washer_state = True
+horizontal_df, vertical_df = define_df()
+while washer_state:
+    horizontal_state = random.randint(0, 1)
+    vertical_state = random.randint(0, 1)
+    horizontal_df, vertical_df = current_df(horizontal_df, horizontal_state, vertical_df, vertical_state)
+
+    if (datetime.now() - start_time) > timedelta(seconds=delay_time):
+        start_time = datetime.now()
+        merge_df = merge_csv(horizontal_df, vertical_df)
+        horizontal_avg, vertical_avg = determine_mean(sleep_time, delay_time, merge_df)
+        print horizontal_avg, vertical_avg
+        if horizontal_avg and vertical_avg < 0.35:
+            print 'Washer has turned off'
+            washer_state = False
+
+    time.sleep(sleep_time)
+        # s.enter(20, 1, merge_csv(horizontal_df, vertical_df),  (s,))
