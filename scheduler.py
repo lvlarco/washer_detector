@@ -8,7 +8,6 @@ import pandas as pd
 # start_time = datetime.now()
 # print start_time
 
-
 hor_cols = ['datetime', 'horizontal']
 ver_cols = ['datetime', 'vertical']
 
@@ -34,7 +33,7 @@ def merge_csv(horizontal_df, vertical_df):
 
 
 def determine_mean(sleep_time, delay_time, df):
-    number_points = delay_time / sleep_time
+    number_points = int(delay_time / sleep_time)
     df = df.tail(number_points)
     horizontal_avg = df['horizontal'].mean()
     vertical_avg = df['vertical'].mean()

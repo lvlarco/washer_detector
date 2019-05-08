@@ -1,8 +1,8 @@
 import RPi.GPIO as GPIO
-import sched, time
+import time
 import scheduler
+import ifttt_request
 from datetime import datetime, timedelta
-# import pandas as pd
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -28,7 +28,8 @@ hor_cols = ['datetime', 'horizontal']
 ver_cols = ['datetime', 'vertical']
 horizontal_df, vertical_df = scheduler.define_df()
 
-while True:
+washer_state = True
+while washer_state:
     horizontal_state = GPIO.input(horizontal_sensor)
     vertical_state = GPIO.input(vertical_sensor)
     GPIO.output(horizontal_led, False)
@@ -49,6 +50,7 @@ while True:
         print horizontal_avg, vertical_avg
         if horizontal_avg and vertical_avg < 0.1:
             print 'Washer has turned off'
+            ifttt_request.main()
             washer_state = False
     time.sleep(sleep_time)
 

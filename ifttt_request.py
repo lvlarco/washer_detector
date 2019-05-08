@@ -13,8 +13,7 @@ def main():
     # event = 'washer_stopped_notification'
     send_ifttt_request(event)
 
-
-main()
+# main()
 
 
 
