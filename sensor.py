@@ -1,13 +1,12 @@
 import RPi.GPIO as GPIO
 import sched, time
-# from time import sleep, time
 from datetime import datetime
 import pandas as pd
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
-start_time = time.time()
+start_time = datetime.now()
 print start_time
 sleep_time = 2
 
@@ -40,20 +39,22 @@ while True:
     GPIO.output(horizontal_led, False)
     GPIO.output(vertical_led, False)
     print ('Sensors state: horizontal: {0}, vertical: {1}'.format(horizontal_state, vertical_state))
-    time.sleep(sleep_time)
-    if horizontal_state:
-        GPIO.output(horizontal_led, True)
+
+    if horizontal_state or vertical_state:
+        if horizontal_state:
+            GPIO.output(horizontal_led, True)
+        elif vertical_state:
+            GPIO.output(vertical_led, True)
         horizontal_list = pd.DataFrame([[datetime.now().strftime('%H:%M:%S'), horizontal_state]], columns=hor_cols)
         horizontal_df = horizontal_df.append(horizontal_list)
-        time.sleep(sleep_time)
-    if vertical_state:
-        GPIO.output(vertical_led, True)
         vertical_list = pd.DataFrame([[datetime.now().strftime('%H:%M:%S'), vertical_state]], columns=ver_cols)
         vertical_df = vertical_df.append(vertical_list)
-        time.sleep(sleep_time)
+    time.sleep(sleep_time)
 
-    s.enter(10, 1, merge_csv(horizontal_df, vertical_df),  (s,))
-    # s.run()
+    if (datetime.now() - start_time) > timedelta(seconds=15):
+        start_time = datetime.now()
+        merge_csv(horizontal_df, vertical_df)
+        # s.enter(20, 1, merge_csv(horizontal_df, vertical_df),  (s,))
 
 
 
