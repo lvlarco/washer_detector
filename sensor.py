@@ -5,22 +5,18 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
 # Input pins
-# forward_pin = 12
-backward_pin = 18
-# turn_right_pin = 13
-# turn_left_pin = 19
+horizontal_sensor = 18
+vertical_sensor = 23
 
-# GPIO.setup(forward_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(backward_pin, GPIO.IN)#, pull_up_down=GPIO.PUD_UP)
-# GPIO.setup(turn_right_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-# GPIO.setup(turn_left_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(horizontal_sensor, GPIO.IN)
+GPIO.setup(vertical_sensor, GPIO.IN)
 
 while True:
-    state = GPIO.input(backward_pin)
-    print state
-    sleep(1)
-    if state == True:
-    # forward_state = GPIO.input(forward_pin)
-#    backward_state = GPIO.input(backward_pin)
- #   if backward_state == True:
-        print 'Vibration detected'
+    horizontal_state = GPIO.input(horizontal_sensor)
+    vertical_state = GPIO.input(vertical_sensor)
+    # print ('Sensors state: horizontal: {0}, vertical: {1}'.format(horizontal_state, vertical_state))
+    sleep(0.5)
+    if horizontal_state:
+        print 'Horizontal vibration'
+    if vertical_state:
+        print 'Vertical vibration'
