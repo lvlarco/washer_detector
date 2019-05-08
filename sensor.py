@@ -29,9 +29,8 @@ vertical_df = pd.DataFrame(columns=['datetime', 'vertical'])
 s = sched.scheduler(time.time, time.sleep)
 
 def merge_csv(horizontal_df, vertical_df):
-    print "Doing stuff..."
-    # do your stuff
-    # s.enter(10, 1, do_something, (sc,))
+    result_df = pd.merge(horizontal_df, vertical_df, on='datetime', how='outer')
+    print result_df
 
 while True:
     horizontal_state = GPIO.input(horizontal_sensor)
@@ -42,17 +41,17 @@ while True:
     time.sleep(sleep_time)
     if horizontal_state:
         GPIO.output(horizontal_led, True)
-        horizontal_list = [datetime.now(), horizontal_state]
-        horizontal_df.append(horizontal_list)
+        horizontal_list = pd.DataFrame([[datetime.now().strftime('%H:%M:%S'), horizontal_state]], columns=hor_cols)
+        horizontal_df = horizontal_df.append(horizontal_list)
         time.sleep(sleep_time)
     if vertical_state:
         GPIO.output(vertical_led, True)
-        vertical_list = [datetime.now(), vertical_state]
-        vertical_df.append(vertical_list)
+        vertical_list = pd.DataFrame([[datetime.now().strftime('%H:%M:%S'), vertical_state]], columns=ver_cols)
+        vertical_df = vertical_df.append(vertical_list)
         time.sleep(sleep_time)
 
-    s.enter(10, 1, merge_csv(horizontal_df, vertical_df), (s,))
-    s.run()
+    s.enter(10, 1, merge_csv(horizontal_df, vertical_df),  (s,))
+    # s.run()
 
 
 
