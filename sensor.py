@@ -15,19 +15,21 @@ GPIO.setup(horizontal_sensor, GPIO.IN)
 GPIO.setup(vertical_sensor, GPIO.IN)
 GPIO.setup(horizontal_led, GPIO.OUT)
 GPIO.setup(vertical_led, GPIO.OUT)
-
+#GPIO.output(vertical_led, False)
 while True:
     horizontal_state = GPIO.input(horizontal_sensor)
     vertical_state = GPIO.input(vertical_sensor)
     GPIO.output(horizontal_led, False)
     GPIO.output(vertical_led, False)
     print ('Sensors state: horizontal: {0}, vertical: {1}'.format(horizontal_state, vertical_state))
-    sleep(0.5)
+    sleep(0.1)
     if horizontal_state:
-        # print 'Horizontal vibration'
+      #   print 'Horizontal vibration'
         GPIO.output(horizontal_led, True)
+        sleep(0.1)
 
     if vertical_state:
         # print 'Vertical vibration'
         GPIO.output(vertical_led, True)
+        sleep(0.1)
 
