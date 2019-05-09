@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 import pandas as pd
+# import ifttt_request
 # import random
 # import sched, time
 #
@@ -7,6 +8,8 @@ import pandas as pd
 # delay_time = 5
 # start_time = datetime.now()
 # print start_time
+# threshold = 0.3
+# event = 'washer_stopped_sms'
 
 hor_cols = ['datetime', 'horizontal']
 ver_cols = ['datetime', 'vertical']
@@ -28,7 +31,7 @@ def current_df(horizontal_df, horizontal_state, vertical_df, vertical_state):
 
 def merge_csv(horizontal_df, vertical_df):
     result_df = pd.merge(horizontal_df, vertical_df, on='datetime', how='outer').sort_values(by='datetime')
-    print result_df
+    # print result_df
     return result_df
 
 
@@ -37,6 +40,7 @@ def determine_mean(sleep_time, delay_time, df):
     df = df.tail(number_points)
     horizontal_avg = df['horizontal'].mean()
     vertical_avg = df['vertical'].mean()
+    print ('Horizontal: {0}, Vertical: {1}'.format(horizontal_avg, vertical_avg))
     return horizontal_avg, vertical_avg
 
 
@@ -51,10 +55,9 @@ def determine_mean(sleep_time, delay_time, df):
 #         start_time = datetime.now()
 #         merge_df = merge_csv(horizontal_df, vertical_df)
 #         horizontal_avg, vertical_avg = determine_mean(sleep_time, delay_time, merge_df)
-#         print horizontal_avg, vertical_avg
-#         if horizontal_avg and vertical_avg < 0.35:
+#         if horizontal_avg < threshold and vertical_avg < threshold:
 #             print 'Washer has turned off'
-#             washer_state = False
+#             # ifttt_request.send_ifttt_request(event)
+#             # washer_state = False
 #
 #     time.sleep(sleep_time)
-#         # s.enter(20, 1, merge_csv(horizontal_df, vertical_df),  (s,))

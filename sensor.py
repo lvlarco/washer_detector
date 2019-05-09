@@ -10,7 +10,9 @@ GPIO.setmode(GPIO.BCM)
 start_time = datetime.now()
 print start_time
 sleep_time = 0.5
-delay_time = 10
+delay_time = 15
+threshold = 0.05
+event = 'washer_stopped_sms'
 
 # Input pins
 horizontal_sensor = 18
@@ -47,10 +49,9 @@ while washer_state:
         start_time = datetime.now()
         merge_df = scheduler.merge_csv(horizontal_df, vertical_df)
         horizontal_avg, vertical_avg = scheduler.determine_mean(sleep_time, delay_time, merge_df)
-        print horizontal_avg, vertical_avg
-        if horizontal_avg and vertical_avg < 0.1:
+        if horizontal_avg < threshold and vertical_avg < threshold:
             print 'Washer has turned off'
-            ifttt_request.main()
+            ifttt_request.send_ifttt_request(event)
             washer_state = False
     time.sleep(sleep_time)
 
